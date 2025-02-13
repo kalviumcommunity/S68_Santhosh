@@ -1,33 +1,26 @@
 const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
+const Item = require('../Items');
 
-const ItemSchema = new mongoose.Schema({
-  name: String,
-  description: String
+const router = express.Router();
+
+router.get('/items', async (req, res) => {
+  res.status(200).json({ message: 'Hello World' });
 });
-const Item = mongoose.model('Item', ItemSchema);
 
 
 router.post('/items', async (req, res) => {
-  try {
-    const newItem = new Item(req.body);
-    await newItem.save();
-    res.status(201).json(newItem);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const { name, description } = req.body;
+        const newItem = new Item({ name, description });
+        await newItem.save();
+        res.status(201).json(newItem);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
+module.exports = router;
 
-router.get('/items', async (req, res) => {
-  try {
-    const items = await Item.find();
-    res.status(200).json(items);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 
 router.put('/items/:id', async (req, res) => {
