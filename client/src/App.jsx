@@ -1,12 +1,14 @@
-import './App.css';
+import React from "react";
+import FeatureCard from "./components/FeatureCard";
 
-function App() {
+const App = () => {
   return (
-    <div className="container">
-      <h1>Welcome to ASAP Project</h1>
-      <p>This project is focused on building an advanced solution for an interactive web application that efficiently manages data using MongoDB and Express.js on the backend while providing a seamless user experience with React on the frontend. The goal is to create a responsive and user-friendly platform that enables users to perform CRUD operations, view real-time updates, and interact with stored data effortlessly.</p>
+    <div>
+      <h1>Welcome to My ASAP Project</h1>
+      <FeatureCard title="AI Assistant" description="An AI-driven mental health assistant that helps users find solutions to their problems." />
+      <FeatureCard title="24/7 Support" description="Always available to assist users with their queries and concerns." />
     </div>
   );
-}
+};
 
 export default App;
