@@ -1,0 +1,21 @@
+.feature-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: 10px auto;
+    text-align: center;
+    background-color: white;
+  }
+  
+  .feature-card h2 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .feature-card p {
+    font-size: 1rem;
+    color: #666;
+  }
+  

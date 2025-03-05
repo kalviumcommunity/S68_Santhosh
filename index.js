@@ -10,7 +10,10 @@ const port = process.env.PORT || 8080;
 const url = process.env.db_url;
 
 app.use(express.json()); 
-app.use('/route', router); 
+app.use('/route', router);
+
+
+
 
 app.listen(port, async () => {
   try {

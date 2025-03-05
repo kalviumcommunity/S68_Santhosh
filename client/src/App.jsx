@@ -1,12 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FeatureCard from "./components/FeatureCard";
+import { fetchItems } from "./service-API/api";
 
 const App = () => {
+  const [features, setFeatures] = useState([]);
+
+  useEffect(() => {
+    const getItems = async () => {
+      const data = await fetchItems();
+      setFeatures(data);
+    };
+    getItems();
+  }, []);
+
   return (
     <div>
       <h1>Welcome to My ASAP Project</h1>
-      <FeatureCard title="AI Assistant" description="An AI-driven mental health assistant that helps users find solutions to their problems." />
-      <FeatureCard title="24/7 Support" description="Always available to assist users with their queries and concerns." />
+      {features.length > 0 ? (
+        features.map((feature) => (
+          <FeatureCard key={feature._id} title={feature.name} description={feature.description} />
+        ))
+      ) : (
+        <p>Loading features...</p>
+      )}
     </div>
   );
 };
