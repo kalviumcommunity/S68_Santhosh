@@ -1,4 +1,5 @@
 import React from "react";
+import "./FeatureCard.css"; // ✅ Import the CSS file
 
 const FeatureCard = ({ title, description }) => {
   return (
