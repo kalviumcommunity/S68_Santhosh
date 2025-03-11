@@ -19,12 +19,9 @@ const App = () => {
   return (
     <div>
       <h1>Welcome to My ASAP Project</h1>
-
       
       <EntityForm onEntityAdded={getItems} />
-
-      
-      <EntityList features={features} />
+      <EntityList features={features} onEntityUpdated={getItems} />
     </div>
   );
 };
