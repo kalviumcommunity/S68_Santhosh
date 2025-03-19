@@ -1,34 +1,32 @@
-import { useState } from "react";
 import { deleteItem } from "../service-API/api";
 import UpdateForm from "./UpdateForm";
 
 const EntityList = ({ features, onEntityUpdated }) => {
-  const [editingId, setEditingId] = useState(null);
-
   const handleDelete = async (id) => {
     await deleteItem(id);
     onEntityUpdated();
   };
 
   return (
-    <ul>
-      {features.map((feature) => (
-        <li key={feature._id}>
-          <strong>{feature.name}</strong> - {feature.description}
-          <button onClick={() => setEditingId(feature._id)}>Edit</button>
-          <button onClick={() => handleDelete(feature._id)}>Delete</button>
-
-          {editingId === feature._id && (
-            <UpdateForm
-              id={feature._id}
-              currentName={feature.name}
-              onUpdate={onEntityUpdated}
-              onClose={() => setEditingId(null)}
-            />
-          )}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h2>Item List</h2>
+      {features.length === 0 ? (
+        <p>No items available</p>
+      ) : (
+        <ul>
+          {features.map((feature) => (
+            <li key={feature._id}>
+              <strong>{feature.name}</strong> - {feature.description}  
+              <br />
+              <em>Created by: {feature.created_by?.name || "Unknown"}</em>
+              <br />
+              <UpdateForm feature={feature} onEntityUpdated={onEntityUpdated} />
+              <button onClick={() => handleDelete(feature._id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

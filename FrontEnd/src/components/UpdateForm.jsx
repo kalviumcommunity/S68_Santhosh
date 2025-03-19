@@ -1,27 +1,21 @@
 import { useState } from "react";
 import { updateItem } from "../service-API/api";
 
-const UpdateForm = ({ id, currentName, onUpdate, onClose }) => {
-  const [newName, setNewName] = useState(currentName);
+const UpdateForm = ({ feature, onEntityUpdated }) => {
+  const [name, setName] = useState(feature.name);
+  const [description, setDescription] = useState(feature.description);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newName.trim() === "") return;
-
-    await updateItem(id, { name: newName });
-    onUpdate(); 
-    onClose(); 
+    await updateItem(feature._id, { name, description, created_by: feature.created_by });
+    onEntityUpdated();
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={newName}
-        onChange={(e) => setNewName(e.target.value)}
-      />
+      <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
       <button type="submit">Update</button>
-      <button type="button" onClick={onClose}>Cancel</button>
     </form>
   );
 };
