@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi"); 
-const Item = require("../Items");
+const Item = require("../schema/Items");
 
 const router = express.Router();
 

@@ -1,47 +1,23 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/route/items"; 
+const API_URL = "http://localhost:8080/api";
 
-
-export const fetchItems = async () => {
+export const fetchUsers = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}/users`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching items:", error);
+    console.error("Error fetching users:", error);
     return [];
   }
 };
 
-
-export const addItem = async (item) => {
+export const fetchEntitiesByUser = async (userId) => {
   try {
-    const response = await axios.post(API_URL, item, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await axios.get(`${API_URL}/entities/${userId}`);
     return response.data;
   } catch (error) {
-    console.error("Error adding item:", error);
-  }
-};
-
-
-export const updateItem = async (id, updatedData) => {
-  try {
-    const response = await axios.put(`${API_URL}/${id}`, updatedData, {
-      headers: { "Content-Type": "application/json" },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error updating item:", error);
-  }
-};
-
-
-export const deleteItem = async (id) => {
-  try {
-    await axios.delete(`${API_URL}/${id}`);
-  } catch (error) {
-    console.error("Error deleting item:", error);
+    console.error("Error fetching entities:", error);
+    return [];
   }
 };
