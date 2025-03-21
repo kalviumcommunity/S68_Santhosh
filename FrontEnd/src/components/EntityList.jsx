@@ -1,31 +1,25 @@
-import { useState } from "react";
-import { deleteItem } from "../service-API/api";
-import UpdateForm from "./UpdateForm";
+import { useState, useEffect } from "react";
+import { fetchEntitiesByUser } from "../service-API/api";
 
-const EntityList = ({ features, onEntityUpdated }) => {
-  const [editingId, setEditingId] = useState(null);
+const EntityList = ({ userId }) => {
+  const [entities, setEntities] = useState([]);
 
-  const handleDelete = async (id) => {
-    await deleteItem(id);
-    onEntityUpdated();
-  };
+  useEffect(() => {
+    if (!userId) return;
+
+    const getEntities = async () => {
+      const data = await fetchEntitiesByUser(userId);
+      setEntities(data);
+    };
+
+    getEntities();
+  }, [userId]);
 
   return (
     <ul>
-      {features.map((feature) => (
-        <li key={feature._id}>
-          <strong>{feature.name}</strong> - {feature.description}
-          <button onClick={() => setEditingId(feature._id)}>Edit</button>
-          <button onClick={() => handleDelete(feature._id)}>Delete</button>
-
-          {editingId === feature._id && (
-            <UpdateForm
-              id={feature._id}
-              currentName={feature.name}
-              onUpdate={onEntityUpdated}
-              onClose={() => setEditingId(null)}
-            />
-          )}
+      {entities.map((entity) => (
+        <li key={entity.id}>
+          <strong>{entity.name}</strong> - {entity.description}
         </li>
       ))}
     </ul>

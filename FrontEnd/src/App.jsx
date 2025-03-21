@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
-import FeatureCard from "./components/FeatureCard";
-import { fetchItems } from "./service-API/api";
-import EntityForm from "./components/EntityForm"; 
-import EntityList from "./components/EntityList"; 
+import { useState } from "react";
+import UserDropdown from "./components/UserDropDown";
+import EntityList from "./components/EntityList";
 
 const App = () => {
-  const [features, setFeatures] = useState([]);
-
-  const getItems = async () => {
-    const data = await fetchItems();
-    setFeatures(data);
-  };
-
-  useEffect(() => {
-    getItems();
-  }, []);
+  const [selectedUser, setSelectedUser] = useState("");
 
   return (
     <div>
-      <h1>Welcome to My ASAP Project</h1>
-      
-      <EntityForm onEntityAdded={getItems} />
-      <EntityList features={features} onEntityUpdated={getItems} />
+      <h1>ASAP Project</h1>
+      <UserDropdown onSelectUser={setSelectedUser} />
+      {selectedUser && <EntityList userId={selectedUser} />}
     </div>
   );
 };
