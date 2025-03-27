@@ -1,16 +1,14 @@
-import { useState } from "react";
-import UserDropdown from "./components/UserDropDown";
-import EntityList from "./components/EntityList";
+import { AuthProvider } from "./context/authContext";
+import Login from "./components/Login";
 
 const App = () => {
-  const [selectedUser, setSelectedUser] = useState("");
-
   return (
-    <div>
-      <h1>ASAP Project</h1>
-      <UserDropdown onSelectUser={setSelectedUser} />
-      {selectedUser && <EntityList userId={selectedUser} />}
-    </div>
+    <AuthProvider>
+      <div>
+        <h1>ASAP Project Authentication</h1>
+        <Login />
+      </div>
+    </AuthProvider>
   );
 };
 

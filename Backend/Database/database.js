@@ -2,8 +2,8 @@ const mysql = require("mysql2");
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root", // Change if necessary
-  password: "password", // Change if necessary
+  user: "root",
+  password: "password", 
   database: "asap_project",
 });
 
