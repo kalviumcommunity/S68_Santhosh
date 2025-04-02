@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
@@ -6,21 +6,29 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Check if user is already logged in
+  // Check if user is logged in on app load
   useEffect(() => {
-    axios.get("http://localhost:8080/auth/user", { withCredentials: true })
-      .then(response => setUser(response.data.username))
+    axios.get("http://localhost:8080/auth/protected", { withCredentials: true })
+      .then((res) => setUser(res.data.message))
       .catch(() => setUser(null));
   }, []);
 
-  const login = async (username) => {
-    await axios.post("http://localhost:8080/auth/login", { username }, { withCredentials: true });
-    setUser(username);
+  const login = async (username, password) => {
+    try {
+      await axios.post("http://localhost:8080/auth/login", { username, password }, { withCredentials: true });
+      setUser(username);
+    } catch (error) {
+      console.error("Login failed:", error.response?.data?.message);
+    }
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
-    setUser(null);
+    try {
+      await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
+      setUser(null);
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data?.message);
+    }
   };
 
   return (

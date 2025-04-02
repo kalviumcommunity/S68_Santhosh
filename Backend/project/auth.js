@@ -1,32 +1,67 @@
 const express = require("express");
-const router = express.Router();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs"); // If using password hashing
 const cookieParser = require("cookie-parser");
+const User = require("../models/User"); // Ensure this is your User model
+require("dotenv").config();
 
+const router = express.Router();
 router.use(cookieParser());
 
+// Generate JWT Token
+const generateToken = (user) => {
+  return jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
 
-router.post("/login", (req, res) => {
-    const { username } = req.body;
-    if (!username) {
-        return res.status(400).json({ error: "Username is required" });
-    }
+// 🟢 **Login Endpoint**
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-    res.cookie("username", username, { httpOnly: true, secure: false }); 
-    res.json({ message: "Login successful", username });
+    // Find the user in the database
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    // If using hashed passwords, compare them
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+    // Generate a token
+    const token = generateToken(user);
+
+    // Store token in HTTP-only cookie
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
+
+    res.status(200).json({ message: "Login successful", username: user.username });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
-
+// 🔴 **Logout Endpoint**
 router.post("/logout", (req, res) => {
-    res.clearCookie("username");
-    res.json({ message: "Logged out successfully" });
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully" });
 });
 
-router.get("/user", (req, res) => {
-    const username = req.cookies.username;
-    if (!username) {
-        return res.status(401).json({ message: "Not logged in" });
-    }
-    res.json({ username });
+// 🛡 **Middleware to Protect Routes**
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid Token" });
+
+    req.user = decoded;
+    next();
+  });
+};
+
+// Example: Protect a Route
+router.get("/protected", verifyToken, (req, res) => {
+  res.status(200).json({ message: `Welcome, ${req.user.username}` });
 });
 
 module.exports = router;
