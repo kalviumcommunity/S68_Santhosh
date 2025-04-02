@@ -1,13 +1,20 @@
-import { AuthProvider } from "./context/authContext";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "../context/AuthContext";
+import Home from "./pages/Home";
 import Login from "./components/Login";
+import ProtectedPage from "./pages/ProtectedPage";
 
 const App = () => {
   return (
     <AuthProvider>
-      <div>
-        <h1>ASAP Project Authentication</h1>
-        <Login />
-      </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/protected" element={<ProtectedPage />} />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 };
